@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maya &amp; Arjun — RSVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Karla:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; background: #FCFBF8; -webkit-text-size-adjust: 100%;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  body { font-family: Karla, system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+  a { color: #B0233C; text-decoration: none; }
+  a:hover { color: #7E1329; }
+
+  @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(2deg); } }
+  @keyframes pulse { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+
+  #root { position: relative; height: 560vh; background: #FCFBF8; }
+  @media (max-width: 760px) {
+    #root { height: 620vh; overflow-x: clip; }
+  }
+  #root::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+    z-index: 1;
+  }
+
+  #stageWrap { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+
+  #stage { position: absolute; inset: 0; will-change: transform, opacity; z-index: 2; }
+
+  .ring { position: absolute; left: 50%; width: 0; height: 0; will-change: transform; }
+
+  .heart-wrap {
+    position: absolute; left: -50px; top: -50px; width: 100px; height: 100px;
+    opacity: 0; transform: translate(0px, 0px) rotate(0deg) scale(.12);
+    will-change: transform;
+  }
+  .heart-wrap svg { display: block; overflow: visible; filter: drop-shadow(0 4px 8px rgba(94,17,34,.10)); }
+
+  #centerBtn {
+    position: absolute; left: 50%; width: 0; height: 0; cursor: pointer;
+    background: none; border: none; padding: 0; -webkit-tap-highlight-color: transparent;
+  }
+  #centerHeart {
+    position: absolute;
+    animation: bob 3.4s ease-in-out infinite;
+    transition: transform .9s cubic-bezier(.2,.9,.25,1), width .2s linear, height .2s linear, left .2s linear, top .2s linear;
+  }
+  #centerHeart.burst { animation: none; transform: scale(1.06); }
+  #centerHeart svg { display: block; overflow: visible; filter: drop-shadow(0 12px 24px rgba(94,17,34,.14)); }
+
+  #label {
+    position: absolute; left: 0; right: 0; text-align: center;
+    pointer-events: none; transition: opacity .45s ease, transform .6s ease;
+  }
+  #label.burst { opacity: 0; transform: translateY(10px); }
+  #label .title { font-family: Gloock, serif; font-size: 30px; color: #8E1B33; letter-spacing: .01em; }
+  #label .sub { font-size: 12px; letter-spacing: .28em; text-transform: uppercase; color: #B98F86; margin-top: 8px; }
+  @media (max-width: 760px) {
+    #label .title { font-size: clamp(22px, 7vw, 30px); }
+    #label .sub { font-size: 10px; margin-top: 7px; }
+  }
+
+  #scrollHint {
+    position: absolute; left: 0; right: 0; text-align: center;
+    opacity: 0; pointer-events: none; transition: opacity .8s ease .8s;
+  }
+  #scrollHint.show { opacity: 1; }
+  #scrollHint span { font-size: 12px; letter-spacing: .28em; text-transform: uppercase; color: #B0233C; animation: pulse 2.4s ease-in-out infinite; }
+  @media (max-width: 760px) { #scrollHint span { font-size: 10px; } }
+
+  #panel {
+    position: absolute; inset: 0; opacity: 0; pointer-events: none; z-index: 3;
+    background: #F7EEDD;
+  }
+  #panel::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n2)' opacity='0.3'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  .panel-inner { position: absolute; inset: 0; }
+
+  /* --- desktop panel ------------------------------------------------- */
+
+  .panel-desktop { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; }
+
+  .copy { position: relative; padding: 0 6vw 0 8vw; max-width: 720px; }
+  .kicker { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .kicker .tiny-heart svg { display: block; }
+  .kicker span { font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: #B0233C; }
+
+  h1 {
+    font-family: Gloock, serif; font-weight: 400; font-size: clamp(48px, 5.2vw, 88px);
+    line-height: .96; color: #5E1122; margin: 0 0 18px; text-wrap: pretty;
+  }
+  h1 .and { font-family: Karla, sans-serif; font-style: italic; font-weight: 300; font-size: .58em; color: #B0233C; }
+
+  .blurb { font-size: 19px; line-height: 1.65; color: #7A5F58; margin: 0 0 40px; max-width: 46ch; text-wrap: pretty; }
+
+  .details {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; padding: 26px 0;
+    border-top: 1px solid rgba(94, 17, 34, .16); border-bottom: 1px solid rgba(94, 17, 34, .16); margin-bottom: 36px;
+  }
+  .details .col { display: flex; flex-direction: column; gap: 7px; }
+  .details .label { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: #B98F86; }
+  .details .main { font-family: Gloock, serif; font-size: 22px; color: #5E1122; }
+  .details .sub { font-size: 15px; color: #7A5F58; }
+
+  .rsvp-row { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  #rsvpBtn {
+    appearance: none; border: none; cursor: pointer;
+    padding: 20px 44px; border-radius: 999px; font-family: Karla, sans-serif;
+    font-size: 16px; letter-spacing: .14em; text-transform: uppercase;
+    color: #F7EEDD; background: #B0233C; box-shadow: 0 14px 30px rgba(176,35,60,.28);
+    transition: transform .3s ease, background .4s ease, color .4s ease, box-shadow .4s ease;
+  }
+  #rsvpBtn:hover { transform: translateY(-2px); }
+  #rsvpBtn.replied {
+    cursor: default; color: #5E1122; background: transparent;
+    box-shadow: inset 0 0 0 1.5px rgba(94,17,34,.35);
+  }
+  #rsvpBtn.replied:hover { transform: none; }
+  #rsvpNote { font-size: 14px; color: #B98F86; transition: color .4s ease; }
+  #rsvpNote.replied { color: #B0233C; }
+
+  #illusWrap { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; padding: 6vh 4vw; }
+  #illus { position: relative; width: 100%; max-width: 460px; aspect-ratio: 3 / 4; }
+  #illus .blob { position: absolute; }
+  #illus .caption {
+    position: absolute; left: 0; bottom: -34px; font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px; letter-spacing: .06em; color: #B98F86;
+  }
+  #illus .float-heart svg { display: block; }
+
+  /* --- mobile panel ---------------------------------------------------- */
+
+  .panel-mobile {
+    display: none; flex-direction: column; justify-content: center;
+    padding: max(1.5vh, 12px) 24px; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .panel-mobile::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+  .kicker-m { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: max(.8vh, 4px); }
+  .kicker-m span { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: #B0233C; }
+  .tiny-heart-m { width: 14px; height: 14px; flex: 0 0 auto; }
+  .tiny-heart-m svg { display: block; }
+
+  #figureM {
+    position: relative; align-self: center; height: clamp(110px, 20vh, 210px); width: auto;
+    aspect-ratio: 4 / 5; margin: max(.8vh, 6px) 0;
+  }
+  #figureM .blob { position: absolute; }
+  #figureM .float-heart svg { display: block; }
+
+  h1.h1-m {
+    font-size: clamp(32px, 11vw, 54px); line-height: .95; margin: 4px 0 max(.8vh, 6px);
+    text-align: center; text-wrap: balance;
+  }
+  h1.h1-m .and { font-size: .5em; }
+
+  .blurb-m {
+    font-size: 14px; line-height: 1.5; color: #7A5F58; margin: 0 auto max(1.2vh, 10px);
+    max-width: 34ch; text-align: center; text-wrap: pretty;
+  }
+
+  .details-m {
+    display: flex; flex-direction: column; border-top: 1px solid rgba(94, 17, 34, .16);
+    margin-bottom: max(1.2vh, 10px);
+  }
+  .details-m .row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    padding: max(.9vh, 7px) 2px; border-bottom: 1px solid rgba(94, 17, 34, .16);
+  }
+  .details-m .label { font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: #B98F86; }
+  .details-m .val { text-align: right; }
+  .details-m .main { font-family: Gloock, serif; font-size: 18px; color: #5E1122; }
+  .details-m .sub { font-size: 13px; color: #7A5F58; }
+
+  .rsvp-col { display: flex; flex-direction: column; align-items: center; gap: max(.7vh, 6px); }
+  #rsvpBtnM {
+    appearance: none; border: none; cursor: pointer; width: 100%; min-height: 50px;
+    padding: max(1.1vh, 12px) 32px; border-radius: 999px; font-family: Karla, sans-serif;
+    font-size: 15px; letter-spacing: .14em; text-transform: uppercase;
+    color: #F7EEDD; background: #B0233C; box-shadow: 0 12px 26px rgba(176,35,60,.28);
+    transition: transform .3s ease, background .4s ease, color .4s ease, box-shadow .4s ease;
+  }
+  #rsvpBtnM.replied {
+    cursor: default; color: #5E1122; background: transparent;
+    box-shadow: inset 0 0 0 1.5px rgba(94,17,34,.35);
+  }
+  #rsvpNoteM { font-size: 13px; color: #B98F86; transition: color .4s ease; }
+  #rsvpNoteM.replied { color: #B0233C; }
+
+  @media (max-width: 760px) {
+    .panel-desktop { display: none; }
+    .panel-mobile { display: flex; }
+  }
+</style>
+</head>
+<body>
+
+<div id="root">
+  <div id="stageWrap">
+    <div id="stage">
+      <div id="rings"></div>
+
+      <button id="centerBtn" aria-label="Open">
+        <div id="centerHeart"></div>
+      </button>
+
+      <div id="label">
+        <div class="title">Click me</div>
+        <div class="sub">go on, it opens</div>
+      </div>
+
+      <div id="scrollHint"><span>Scroll</span></div>
+    </div>
+
+    <div id="panel">
+      <div id="panelDesktop" class="panel-inner panel-desktop">
+        <div class="copy">
+          <div class="kicker">
+            <div class="tiny-heart"></div>
+            <span>They said yes</span>
+          </div>
+          <h1>Maya <span class="and">and</span> Arjun</h1>
+          <p class="blurb">Once upon a very ordinary Tuesday, a question was asked and answered. Come help us make a fuss about it — there will be cake, bad dancing and far too many paper hearts.</p>
+
+          <div class="details">
+            <div class="col">
+              <div class="label">When</div>
+              <div class="main">Sat 14 Nov</div>
+              <div class="sub">6:30 pm onwards</div>
+            </div>
+            <div class="col">
+              <div class="label">Where</div>
+              <div class="main">The Glasshouse</div>
+              <div class="sub">12 Orchard Lane</div>
+            </div>
+            <div class="col">
+              <div class="label">Wear</div>
+              <div class="main">Something red</div>
+              <div class="sub">or nearly red</div>
+            </div>
+          </div>
+
+          <div class="rsvp-row">
+            <button id="rsvpBtn">Count me in</button>
+            <div id="rsvpNote">Kindly reply before 30 October</div>
+          </div>
+        </div>
+
+        <div id="illusWrap">
+          <div id="illus">
+            <div class="caption">paper-collage couple — swap in final art</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panelMobile" class="panel-inner panel-mobile">
+        <div class="kicker-m">
+          <div class="tiny-heart-m"></div>
+          <span>They said yes</span>
+          <div class="tiny-heart-m"></div>
+        </div>
+
+        <div id="figureM"></div>
+
+        <h1 class="h1-m">Maya <span class="and">and</span> Arjun</h1>
+        <p class="blurb-m">Once upon a very ordinary Tuesday, a question was asked and answered. Come help us make a fuss about it.</p>
+
+        <div class="details-m">
+          <div class="row">
+            <div class="label">When</div>
+            <div class="val">
+              <div class="main">Sat 14 Nov</div>
+              <div class="sub">6:30 pm onwards</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Where</div>
+            <div class="val">
+              <div class="main">The Glasshouse</div>
+              <div class="sub">12 Orchard Lane</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Wear</div>
+            <div class="val">
+              <div class="main">Something red</div>
+              <div class="sub">or nearly red</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rsvp-col">
+          <button id="rsvpBtnM">Count me in</button>
+          <div id="rsvpNoteM">Kindly reply before 30 October</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const HEART_PATH = "M50,90 C50,90 5,60 5,32 C5,15 17,5 30,5 C39,5 46,10 50,18 C54,10 61,5 70,5 C83,5 95,15 95,32 C95,60 50,90 50,90 Z";
+  const GRAIN = "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2290%22 height=%2290%22%3E%3Cfilter id=%22g%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.1%22 numOctaves=%222%22/%3E%3C/filter%3E%3Crect width=%2290%22 height=%2290%22 filter=%22url(%23g)%22 opacity=%220.4%22/%3E%3C/svg%3E')";
+  const PALETTE = ["#B0233C", "#8E1B33", "#C93A4E", "#E0556B", "#D9285A", "#A81340", "#E4738A", "#C2183C", "#F0869B", "#7E1329"];
+  const RING_COUNT = 3;
+
+  const DESKTOP_COUNTS = [9, 15, 21, 27];
+  const DESKTOP_RADII = [180, 300, 425, 545];
+  const DESKTOP_SIZES = [1.0, 0.86, 0.74, 0.62];
+  const MOBILE_COUNTS = [7, 12, 17, 22];
+  const MOBILE_RADIUS_MUL = [1.0, 1.66, 2.3, 2.94];
+  const MOBILE_SIZE_MUL = [0.62, 0.5, 0.42, 0.34];
+
+  let heartUid = 0;
+
+  function rnd(seed) {
+    const x = Math.sin(seed * 127.1) * 43758.5453;
+    return x - Math.floor(x);
+  }
+
+  function paperBackground(color, seed) {
+    const a = 10 + rnd(seed) * 160;
+    const light = "rgba(255,255,255," + (0.1 + rnd(seed + 3) * 0.16).toFixed(2) + ")";
+    return {
+      background: "repeating-linear-gradient(" + a.toFixed(0) + "deg, " + light + " 0px 2px, rgba(0,0,0,0.07) 2px 3px, rgba(255,255,255,0) 3px 6px), " +
+        "radial-gradient(120% 90% at " + (20 + rnd(seed + 7) * 60).toFixed(0) + "% 20%, rgba(255,255,255,.28), rgba(0,0,0,.18)), " + GRAIN + ", " + color,
+      blend: "overlay, soft-light, multiply, normal"
+    };
+  }
+
+  function heartSVG(color, seed) {
+    const id = "hc" + (heartUid++);
+    const p = paperBackground(color, seed);
+    return '<svg viewBox="0 0 100 100" width="100%" height="100%">' +
+      '<defs><clipPath id="' + id + '" clipPathUnits="userSpaceOnUse"><path d="' + HEART_PATH + '" /></clipPath></defs>' +
+      '<foreignObject x="0" y="0" width="100" height="100" clip-path="url(#' + id + ')">' +
+      '<div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;background:' + p.background + ';background-blend-mode:' + p.blend + ';"></div>' +
+      '</foreignObject></svg>';
+  }
+
+  function blobStyle(el, color, seed) {
+    const p = paperBackground(color, seed);
+    el.style.background = p.background;
+    el.style.backgroundBlendMode = p.blend;
+  }
+
+  function addBlobTo(container, color, seed, css) {
+    const el = document.createElement("div");
+    el.className = "blob";
+    Object.assign(el.style, css);
+    blobStyle(el, color, seed);
+    container.insertBefore(el, container.firstChild);
+    return el;
+  }
+
+  function addFloatHeartTo(container, color, seed, css) {
+    const el = document.createElement("div");
+    el.className = "float-heart";
+    el.style.position = "absolute";
+    Object.assign(el.style, css);
+    el.innerHTML = heartSVG(color, seed);
+    container.insertBefore(el, container.firstChild);
+    return el;
+  }
+
+  const mq = window.matchMedia("(max-width: 760px)");
+  function isMobile() { return mq.matches; }
+
+  function computeUnit() {
+    const w = (stageWrap.clientWidth || window.innerWidth);
+    return Math.max(60, Math.min(w, window.innerHeight * 0.9) / 3.4);
+  }
+
+  // --- rings ---------------------------------------------------------------
+
+  const ringsEl = document.getElementById("rings");
+  const stageWrap = document.getElementById("stageWrap");
+  const heartWraps = [];
+  let currentMode = null;
+  let currentUnit = null;
+  let burst = false;
+
+  function buildRingsDOM() {
+    const mobile = isMobile();
+    currentMode = mobile ? "mobile" : "desktop";
+    ringsEl.innerHTML = "";
+    heartWraps.length = 0;
+    const counts = mobile ? MOBILE_COUNTS : DESKTOP_COUNTS;
+
+    for (let i = 0; i < RING_COUNT; i++) {
+      const ringEl = document.createElement("div");
+      ringEl.className = "ring";
+      ringEl.dataset.ring = String(i);
+
+      for (let j = 0; j < counts[i]; j++) {
+        const seed = i * 37 + j * 7 + 1;
+        const color = PALETTE[Math.floor(rnd(seed + 13) * PALETTE.length)];
+
+        const wrap = document.createElement("div");
+        wrap.className = "heart-wrap";
+        wrap.dataset.ring = String(i);
+        wrap.dataset.j = String(j);
+        wrap.dataset.seed = String(seed);
+        wrap.innerHTML = heartSVG(color, seed);
+
+        ringEl.appendChild(wrap);
+        heartWraps.push(wrap);
+      }
+      ringsEl.appendChild(ringEl);
+    }
+  }
+
+  function applyRings(instant) {
+    const mobile = isMobile();
+    const unit = mobile ? computeUnit() : null;
+    currentUnit = unit;
+    const counts = mobile ? MOBILE_COUNTS : DESKTOP_COUNTS;
+
+    heartWraps.forEach((wrap) => {
+      const i = Number(wrap.dataset.ring);
+      const j = Number(wrap.dataset.j);
+      const seed = Number(wrap.dataset.seed);
+      const count = counts[i];
+
+      const angJitterRange = mobile ? 0.2 : 0.16;
+      const ang = (j / count) * Math.PI * 2 + rnd(seed) * angJitterRange;
+
+      let rad, s;
+      if (mobile) {
+        const radJitter = 0.93 + rnd(seed + 11) * 0.14;
+        const sJitter = 0.85 + rnd(seed + 5) * 0.38;
+        rad = unit * MOBILE_RADIUS_MUL[i] * radJitter;
+        s = (unit / 100) * MOBILE_SIZE_MUL[i] * sJitter;
+      } else {
+        const radJitter = 0.92 + rnd(seed + 11) * 0.16;
+        const sJitter = 0.82 + rnd(seed + 5) * 0.4;
+        rad = DESKTOP_RADII[i] * radJitter;
+        s = DESKTOP_SIZES[i] * sJitter;
+      }
+
+      const rot = -26 + rnd(seed + 2) * 52;
+      const tx = Math.cos(ang) * rad, ty = Math.sin(ang) * rad;
+      const transformDelay = i * (mobile ? 0.08 : 0.09) + rnd(seed + 21) * (mobile ? 0.2 : 0.22);
+      const opacityDelay = i * (mobile ? 0.08 : 0.09);
+      const transitionStr =
+        "transform 1.15s cubic-bezier(.2,.9,.25,1) " + transformDelay.toFixed(2) + "s, " +
+        "opacity .5s ease " + opacityDelay.toFixed(2) + "s";
+
+      wrap.style.transition = instant ? "none" : transitionStr;
+      if (burst) {
+        wrap.style.transform = "translate(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px) rotate(" + rot.toFixed(1) + "deg) scale(" + s.toFixed(3) + ")";
+        wrap.style.opacity = "1";
+      } else {
+        wrap.style.transform = "translate(0px,0px) rotate(0deg) scale(.12)";
+        wrap.style.opacity = "0";
+      }
+      if (instant) {
+        requestAnimationFrame(() => { wrap.style.transition = transitionStr; });
+      }
+    });
+
+    const anchorTop = mobile ? "44%" : "50%";
+    document.querySelectorAll(".ring").forEach((el) => { el.style.top = anchorTop; });
+    centerBtn.style.top = anchorTop;
+    stage.style.transformOrigin = mobile ? "50% 44%" : "50% 50%";
+    scrollHint.style.bottom = mobile ? "30px" : "46px";
+
+    if (mobile) {
+      const cs = unit * 1.02;
+      centerHeart.style.width = cs + "px";
+      centerHeart.style.height = cs + "px";
+      centerHeart.style.left = (-cs / 2) + "px";
+      centerHeart.style.top = (-cs * 0.54) + "px";
+      label.style.top = "calc(44% + " + (cs * 0.56).toFixed(0) + "px)";
+    } else {
+      centerHeart.style.width = "170px";
+      centerHeart.style.height = "170px";
+      centerHeart.style.left = "-85px";
+      centerHeart.style.top = "-95px";
+      label.style.top = "calc(50% + 110px)";
+    }
+    label.querySelector(".title").textContent = mobile ? "Tap me" : "Click me";
+  }
+
+  // --- center heart / label / burst trigger --------------------------------
+
+  const centerHeart = document.getElementById("centerHeart");
+  centerHeart.innerHTML = heartSVG("#B0233C", 3);
+
+  document.querySelectorAll(".kicker .tiny-heart").forEach((el) => { el.innerHTML = heartSVG("#B0233C", 9); });
+  document.querySelectorAll(".kicker-m .tiny-heart-m").forEach((el) => { el.innerHTML = heartSVG("#B0233C", 9); });
+
+  const label = document.getElementById("label");
+  const scrollHint = document.getElementById("scrollHint");
+  const centerBtn = document.getElementById("centerBtn");
+  const stage = document.getElementById("stage");
+
+  function triggerBurst() {
+    if (burst) return;
+    burst = true;
+    centerHeart.classList.add("burst");
+    label.classList.add("burst");
+    scrollHint.classList.add("show");
+    applyRings(false);
+  }
+  centerBtn.addEventListener("click", triggerBurst);
+
+  // --- scroll-driven zoom / panel reveal ------------------------------------
+
+  const root = document.getElementById("root");
+  const panel = document.getElementById("panel");
+
+  function onScroll() {
+    const mobile = isMobile();
+    const r = root.getBoundingClientRect();
+    const total = r.height - window.innerHeight;
+    const p = Math.min(1, Math.max(0, -r.top / (total || 1)));
+    const spin = mobile ? 160 : 200;
+
+    document.querySelectorAll(".ring").forEach((el, i) => {
+      const dir = i % 2 === 0 ? 1 : -1;
+      el.style.transform = "rotate(" + (p * spin * dir * (1 + i * 0.55)).toFixed(2) + "deg)";
+    });
+
+    const breakP = mobile ? 0.6 : 0.62;
+    const zoom = p < breakP ? 1 + p * (mobile ? 2.2 : 2.4) : (mobile ? 2.32 : 2.49) + (p - breakP) * (mobile ? 26 : 22);
+    const fade = p < breakP ? 1 : Math.max(0, 1 - (p - breakP) / (mobile ? 0.13 : 0.14));
+    stage.style.transform = "scale(" + zoom.toFixed(3) + ")";
+    stage.style.opacity = fade.toFixed(3);
+
+    const pv = Math.min(1, Math.max(0, (p - 0.72) / (mobile ? 0.11 : 0.12)));
+    panel.style.opacity = pv.toFixed(3);
+    panel.style.pointerEvents = pv > 0.6 ? "auto" : "none";
+    panel.style.transform = "translateY(" + ((1 - pv) * (mobile ? 22 : 26)).toFixed(1) + "px)";
+
+    if (p > 0.02 && !burst) triggerBurst();
+  }
+
+  function handleModeChange() {
+    const mobile = isMobile();
+    const mode = mobile ? "mobile" : "desktop";
+    if (mode !== currentMode) {
+      buildRingsDOM();
+      applyRings(true);
+    } else {
+      applyRings(false);
+    }
+    onScroll();
+  }
+
+  let resizeRAF = null;
+  function handleResize() {
+    if (resizeRAF) return;
+    resizeRAF = requestAnimationFrame(() => {
+      resizeRAF = null;
+      handleModeChange();
+    });
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true, capture: true });
+  window.addEventListener("resize", handleResize);
+
+  buildRingsDOM();
+  applyRings(true);
+  onScroll();
+
+  // --- RSVP buttons ----------------------------------------------------------
+
+  const rsvpBtn = document.getElementById("rsvpBtn");
+  const rsvpNote = document.getElementById("rsvpNote");
+  const rsvpBtnM = document.getElementById("rsvpBtnM");
+  const rsvpNoteM = document.getElementById("rsvpNoteM");
+  let replied = false;
+
+  function setReplied() {
+    if (replied) return;
+    replied = true;
+    [[rsvpBtn, rsvpNote], [rsvpBtnM, rsvpNoteM]].forEach(([btn, note]) => {
+      btn.textContent = "See you there ♥";
+      btn.classList.add("replied");
+      note.classList.add("replied");
+    });
+  }
+  rsvpBtn.addEventListener("click", setReplied);
+  rsvpBtnM.addEventListener("click", setReplied);
+
+  // --- illustrations ---------------------------------------------------------
+
+  const illus = document.getElementById("illus");
+  addBlobTo(illus, "#C93A4E", 41, { left: "8%", bottom: "6%", width: "38%", height: "56%", borderRadius: "46% 46% 12% 12% / 34% 34% 8% 8%" });
+  addBlobTo(illus, "#8E1B33", 47, { left: "14%", bottom: "60%", width: "24%", height: "18%", borderRadius: "50%" });
+  addBlobTo(illus, "#E0556B", 53, { right: "8%", bottom: "6%", width: "40%", height: "68%", borderRadius: "44% 44% 12% 12% / 30% 30% 8% 8%" });
+  addBlobTo(illus, "#B0233C", 59, { right: "15%", bottom: "72%", width: "25%", height: "19%", borderRadius: "50%" });
+  addFloatHeartTo(illus, "#D9285A", 67, { left: "42%", top: "8%", width: "74px", height: "74px", animation: "bob 4.2s ease-in-out infinite" });
+
+  const figureM = document.getElementById("figureM");
+  addBlobTo(figureM, "#C93A4E", 41, { left: "6%", bottom: "4%", width: "40%", height: "58%", borderRadius: "46% 46% 12% 12% / 34% 34% 8% 8%" });
+  addBlobTo(figureM, "#8E1B33", 47, { left: "13%", bottom: "62%", width: "25%", height: "19%", borderRadius: "50%" });
+  addBlobTo(figureM, "#E0556B", 53, { right: "6%", bottom: "4%", width: "42%", height: "70%", borderRadius: "44% 44% 12% 12% / 30% 30% 8% 8%" });
+  addBlobTo(figureM, "#B0233C", 59, { right: "14%", bottom: "74%", width: "26%", height: "20%", borderRadius: "50%" });
+  addFloatHeartTo(figureM, "#D9285A", 67, { left: "41%", top: "4%", width: "17%", aspectRatio: "1 / 1", animation: "bob 4.2s ease-in-out infinite" });
+})();
+</script>
+
+</body>
+</html>
