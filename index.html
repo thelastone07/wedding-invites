@@ -104,8 +104,14 @@
     position: fixed;
     transform: translate(-50%, -50%) scale(0.18) rotate(0deg);
     opacity: 0;
+    /* Each heart travels real distance from the click point, so its own transition
+       needs to be long enough to read as a smooth throw rather than a snap -- a
+       few hundred px in ~200ms is fast enough to look like a warp. The "expanding
+       wave" still comes from staggering *when* each heart starts (transition-delay,
+       set per element in JS), layered under this longer, gentler per-heart motion. */
     transition-property: transform, opacity;
-    transition-timing-function: cubic-bezier(0.3, 1.4, 0.55, 1), ease-out;
+    transition-duration: 480ms;
+    transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: transform, opacity;
   }
 
@@ -279,13 +285,21 @@
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
       const targets = buildTargets(cx, cy, window.innerWidth, window.innerHeight);
+      const maxDist = targets.reduce((m, t) => Math.max(m, t.dist), 1);
 
-      function spawnOne(t) {
+      // spawn is staggered by distance -- near targets start (and finish)
+      // almost immediately, far targets start later. That's what makes the
+      // burst read as an expanding wave: at any instant there's a filled
+      // inner region (already settled), an active band of hearts mid-growth,
+      // and untouched space beyond that hasn't started yet.
+      const spawnWindow = 500;
+
+      const elements = targets.map((t) => {
         const dx = t.x - cx;
         const dy = t.y - cy;
         const rot = (Math.random() * 36 - 18).toFixed(1);
         const color = randomColor();
-        const duration = 160 + Math.random() * 140;
+        const delay = (t.dist / maxDist) * spawnWindow + Math.random() * 60;
 
         const el = document.createElement("div");
         el.className = "burst-heart";
@@ -296,21 +310,17 @@
         el.style.setProperty("--dx", dx + "px");
         el.style.setProperty("--dy", dy + "px");
         el.style.setProperty("--rot", rot + "deg");
-        el.style.transitionDuration = duration + "ms";
+        el.style.transitionDelay = delay + "ms";
         el.innerHTML = heartMarkup(color);
         burstStage.appendChild(el);
+        return el;
+      });
 
-        requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("settled")));
-      }
-
-      // two hearts thrown per frame -- one right after another, faster than one-per-frame
-      let i = 0;
-      function throwNext() {
-        spawnOne(targets[i++]);
-        if (i < targets.length) spawnOne(targets[i++]);
-        if (i < targets.length) requestAnimationFrame(throwNext);
-      }
-      throwNext();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          for (const el of elements) el.classList.add("settled");
+        });
+      });
     }
 
     heartBtn.addEventListener(
