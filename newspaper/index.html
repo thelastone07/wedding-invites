@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Morning Vow — RSVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&amp;family=Lora:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet" />
+<style>
+  :root {
+    color-scheme: light;
+    --color-bg-outer: #cdc7bd;
+    --color-bg: #e9e4d9;
+    --color-sheet: #efeade;
+    --color-surface: #e7e1d3;
+    --color-coupon: #eae4d6;
+    --color-text: #201f1d;
+    --color-neutral-700: #605d5d;
+    --color-divider: rgba(32, 31, 29, 0.16);
+    --color-accent: #b68235;
+    --color-accent-700: #7d5411;
+    --color-accent-900: #3a270d;
+    --font-heading: "Cormorant Garamond", Georgia, serif;
+    --font-body: "Lora", Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  body {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background: var(--color-bg-outer);
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: var(--color-accent-700); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--color-accent-900); }
+  h1, h2, h3, h4 { margin: 0; font-family: var(--font-heading); font-weight: 400; }
+  ::selection { background: rgba(182, 130, 53, 0.22); }
+
+  @keyframes stampIn {
+    0% { transform: rotate(-14deg) scale(2.4); opacity: 0; }
+    60% { transform: rotate(-14deg) scale(0.94); opacity: 1; }
+    100% { transform: rotate(-14deg) scale(1); opacity: 1; }
+  }
+
+  .grain {
+    position: fixed; inset: 0; z-index: 60; pointer-events: none;
+    mix-blend-mode: multiply; opacity: 0.55; background-size: 180px 180px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .vignette {
+    position: fixed; inset: 0; z-index: 59; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0) 45%, rgba(74,58,36,0.16) 100%);
+  }
+
+  .page { position: relative; background: var(--color-bg); overflow-x: hidden; }
+  .sheet { max-width: 1360px; margin: 0 auto; padding: 0 48px; background: var(--color-sheet); box-shadow: 0 0 60px rgba(60,45,25,0.25); }
+
+  .dateline {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    font-variant-numeric: tabular-nums; color: var(--color-neutral-700);
+    padding-top: 22px;
+  }
+  .rule-hair { height: 1px; background: var(--color-text); margin: 10px 0 0; }
+  .rule-thick { height: 3px; background: var(--color-text); margin: 2px 0 18px; }
+
+  .masthead {
+    font-size: 112px; line-height: 0.86; letter-spacing: 0.02em; text-align: center;
+    text-transform: uppercase;
+  }
+  .masthead-sub {
+    text-align: center; font-size: 12px; letter-spacing: 0.42em; text-transform: uppercase;
+    margin: 16px 0 14px; color: var(--color-neutral-700);
+  }
+  nav.masthead-nav {
+    display: flex; justify-content: center; gap: 44px; padding: 12px 0;
+    font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+    border-bottom: 1px solid var(--color-text); flex-wrap: wrap; row-gap: 8px;
+  }
+  nav.masthead-nav a { text-decoration: none; color: var(--color-text); }
+  nav.masthead-nav a:hover { color: var(--color-accent-700); }
+
+  .fold {
+    padding: 48px 0; border-bottom: 1px solid var(--color-text);
+    transform: perspective(1200px) rotateX(-7deg) translateY(28px);
+    transform-origin: 50% 0%;
+    opacity: 0;
+    transition: transform 900ms cubic-bezier(.22,.61,.36,1), opacity 900ms ease;
+  }
+  .fold.is-shown { transform: perspective(1200px) rotateX(0deg) translateY(0); opacity: 1; }
+  .fold:last-of-type { border-bottom: 0; }
+
+  .sec-bar { display: flex; align-items: baseline; gap: 18px; margin-bottom: 26px; flex-wrap: wrap; }
+  .sec-bar h3 { font-size: 44px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .sec-bar .rule { flex: 1; height: 1px; background: var(--color-text); min-width: 40px; }
+  .sec-bar .tag { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--color-neutral-700); }
+
+  .kicker { font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; margin: 0 0 14px; color: var(--color-accent-700); }
+  .lede { font-size: 26px; line-height: 1.3; margin: 0 0 22px; font-style: italic; }
+  .two-col {
+    columns: 2; column-gap: 28px; column-rule: 1px solid var(--color-divider);
+    text-align: justify; hyphens: auto; font-size: 14.5px; line-height: 1.62;
+  }
+  .dropcap::first-letter {
+    float: left; font-family: var(--font-heading); font-size: 62px; line-height: 0.78;
+    padding: 4px 8px 0 0;
+  }
+
+  .photo-frame { border: 1px solid var(--color-text); padding: 9px; background: var(--color-surface); }
+  .photo-slot {
+    position: relative; filter: sepia(0.35) contrast(1.08) saturate(0.72);
+    background-repeat: no-repeat; background-position: center; background-size: cover;
+    background-image: repeating-linear-gradient(135deg, #cabfa8 0 3px, #d8cfba 3px 6px);
+  }
+  .photo-slot.tall { height: 480px; }
+  .photo-slot.med { height: 210px; }
+  figcaption {
+    font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding-top: 10px; color: var(--color-neutral-700); border-top: 1px solid var(--color-divider); margin-top: 10px;
+  }
+
+  .hero-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; padding-top: 44px; }
+  .hero-hed { font-size: 96px; line-height: 0.9; text-transform: uppercase; letter-spacing: -0.01em; }
+
+  .story-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
+  .story-col { text-align: justify; hyphens: auto; font-size: 14.5px; line-height: 1.62; }
+  .story-col.rule-off { border-right: 1px solid var(--color-divider); padding-right: 32px; }
+  .story-col h4 { font-weight: 600; font-size: 19px; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .story-photo { border: 1px solid var(--color-text); padding: 8px; margin: 16px 0 8px; background: var(--color-surface); }
+  .story-photo-caption { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-700); margin: 0; }
+  .quote-box {
+    border: 1px solid var(--color-text); border-left-width: 4px; padding: 14px 16px;
+    font-family: var(--font-heading); font-style: italic; font-size: 20px; line-height: 1.35;
+  }
+
+  .order-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 40px; align-items: start; }
+  table.order-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  table.order-table thead tr { border-top: 2px solid var(--color-text); border-bottom: 1px solid var(--color-text); }
+  table.order-table th {
+    text-align: left; padding: 10px 8px 10px 0; font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; font-weight: 400; color: var(--color-neutral-700);
+  }
+  table.order-table th:last-child, table.order-table td:last-child { padding-left: 8px; padding-right: 0; width: 200px; }
+  table.order-table th:first-child, table.order-table td:first-child { width: 120px; padding-right: 8px; }
+  table.order-table td { padding: 14px 8px; border-bottom: 1px solid var(--color-divider); }
+  table.order-table tr:last-child td { border-bottom: 2px solid var(--color-text); }
+  .order-hour { font-variant-numeric: tabular-nums; font-family: var(--font-heading); font-size: 22px; }
+  .order-place { color: var(--color-neutral-700); }
+  .order-aside { border: 1px solid var(--color-text); padding: 22px; }
+  .order-aside .tag { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; margin: 0 0 12px; color: var(--color-accent-700); }
+  .order-aside p { margin: 0 0 12px; font-size: 14.5px; line-height: 1.62; text-align: justify; }
+  .order-aside hr { border: 0; height: 1px; background: var(--color-divider); margin: 16px 0; }
+
+  .travel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .travel-card { border: 1px solid var(--color-text); padding: 20px; }
+  .travel-card .tag { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; margin: 0 0 10px; color: var(--color-accent-700); display: block; }
+  .travel-card h4 { font-weight: 600; font-size: 24px; margin: 0 0 10px; }
+  .travel-card p { margin: 0 0 14px; font-size: 14.5px; line-height: 1.62; text-align: justify; }
+  .travel-card .fine { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-700); }
+
+  .dress-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 44px; align-items: center; }
+  .marks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .mark { border: 1px solid var(--color-text); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: var(--color-surface); }
+  .mark-note {
+    grid-column: 1 / -1; border: 1px solid var(--color-text); padding: 12px 14px;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; text-align: center; color: var(--color-neutral-700);
+  }
+
+  .coupon {
+    position: relative; border: 2px dashed var(--color-text); padding: 36px 40px; background: var(--color-coupon);
+  }
+  .coupon-grid { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 40px; align-items: start; }
+  .coupon-divider { background: var(--color-divider); align-self: stretch; }
+  .coupon label { display: block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin: 0 0 8px; color: var(--color-neutral-700); }
+  .coupon-input {
+    width: 100%; box-sizing: border-box; background: transparent; border: 0; border-bottom: 1px solid var(--color-text);
+    padding: 10px 2px; font-family: var(--font-heading); font-size: 28px; color: var(--color-text); outline: none;
+  }
+  .coupon-input::placeholder { color: var(--color-neutral-700); opacity: 0.6; }
+  .coupon-will { margin: 26px 0 12px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-700); }
+  .reply-btns { display: flex; gap: 14px; }
+  .reply-btn {
+    flex: 1; padding: 14px 10px; cursor: pointer; font-family: var(--font-body); font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase; transition: background 150ms ease, color 150ms ease;
+    border: 1px solid var(--color-text); background: transparent; color: var(--color-text);
+  }
+  .reply-btn.active { background: var(--color-text); color: var(--color-sheet); }
+  .coupon-note { margin: 26px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--color-neutral-700); max-width: 44ch; }
+  .signature { font-family: var(--font-heading); font-size: 30px; line-height: 1.3; margin: 0 0 20px; font-style: italic; }
+  .coupon-when { margin: 0 0 24px; font-size: 14.5px; line-height: 1.62; text-align: justify; }
+  .post-btn {
+    width: 100%; padding: 18px 0; background: transparent; border: 1px solid var(--color-accent); color: var(--color-accent-700);
+    font-family: var(--font-body); font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer;
+    transition: background 160ms ease, color 160ms ease, letter-spacing 240ms ease;
+  }
+  .post-btn:hover { background: var(--color-accent-700); color: var(--color-sheet); letter-spacing: 0.42em; }
+  .post-btn:active { background: var(--color-accent-900); color: var(--color-sheet); }
+  .coupon-hint { margin: 12px 0 0; text-align: center; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-accent-700); min-height: 1.2em; }
+
+  .coupon-confirm { text-align: center; padding: 26px 0 34px; display: none; }
+  .coupon-confirm .tag { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; margin: 0 0 22px; color: var(--color-neutral-700); }
+  .stamp {
+    display: inline-block; padding: 18px 34px; border: 3px double var(--color-accent-700);
+    color: var(--color-accent-700); font-family: var(--font-heading); font-size: 38px;
+    letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.9;
+    animation: stampIn 520ms cubic-bezier(.2,.8,.3,1) both;
+  }
+  .confirm-title { font-family: var(--font-heading); font-size: 44px; margin: 26px 0 10px; line-height: 1.15; }
+  .confirm-body { margin: 0 auto; max-width: 52ch; font-size: 15px; line-height: 1.65; color: var(--color-neutral-700); }
+  .amend-btn {
+    margin-top: 26px; background: transparent; border: 0; border-bottom: 1px solid var(--color-text); padding: 4px 2px;
+    font-family: var(--font-body); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer; color: var(--color-text);
+  }
+  .amend-btn:hover { color: var(--color-accent-700); border-color: var(--color-accent); }
+
+  .site-footer {
+    border-top: 3px solid var(--color-text); padding: 20px 0 34px; display: flex; justify-content: space-between;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-neutral-700); flex-wrap: wrap; gap: 8px;
+  }
+
+  @media (max-width: 820px) {
+    .sheet { padding: 0 20px; }
+    .masthead { font-size: 44px; letter-spacing: 0.01em; }
+    .dateline { flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; text-align: center; }
+    nav.masthead-nav { gap: 12px 20px; font-size: 10.5px; padding: 12px 0; }
+    .hero-grid, .story-grid, .order-grid, .dress-grid { grid-template-columns: 1fr !important; gap: 26px !important; }
+    .two-col { columns: 1; column-rule: none; }
+    .lede { font-size: 20px; }
+    .hero-hed { font-size: 52px; }
+    .sec-bar h3 { font-size: 26px; letter-spacing: 0.02em; }
+    .story-col.rule-off { border-right: 0; padding-right: 0; border-bottom: 1px solid var(--color-divider); padding-bottom: 20px; }
+    .photo-slot.tall { height: 300px; }
+    .photo-slot.med { height: 210px; }
+    .coupon { padding: 24px 20px; }
+    .coupon-grid { grid-template-columns: 1fr; }
+    .coupon-divider { display: none; }
+    .coupon-input { font-size: 22px; }
+    .reply-btns { flex-direction: column; }
+    .signature { font-size: 24px; }
+    .fold { padding: 32px 0; }
+    .site-footer { flex-direction: column; text-align: center; align-items: center; }
+    .marks-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    table.order-table { font-size: 13px; }
+    table.order-table td, table.order-table th { padding-left: 4px; padding-right: 4px; }
+    table.order-table th:last-child, table.order-table td:last-child { display: none; }
+    table.order-table td:first-child { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<div class="page">
+  <div class="sheet">
+
+    <header>
+      <div class="dateline">
+        <span>Vol. I &middot; No. 1</span>
+        <span>Saturday, September 12, 2026</span>
+        <span>Price: One Dance</span>
+      </div>
+      <div class="rule-hair"></div>
+      <div class="rule-thick"></div>
+
+      <h1 class="masthead">The Morning Vow</h1>
+      <p class="masthead-sub">Printed in Ravello &middot; Established for one day only</p>
+      <div class="rule-thick" style="margin-bottom: 0;"></div>
+      <div class="rule-hair" style="margin: 2px 0 0;"></div>
+      <nav class="masthead-nav">
+        <a href="#story">The Story</a>
+        <a href="#order">Order of the Day</a>
+        <a href="#travel">Travel &amp; Lodging</a>
+        <a href="#dress">Dress</a>
+        <a href="#rsvp">Reply Coupon</a>
+      </nav>
+    </header>
+
+    <section class="fold hero-grid">
+      <div>
+        <p class="kicker">Late City Edition &middot; Society Pages</p>
+        <h2 class="hero-hed">They Are<br>Getting<br>Married!</h2>
+        <div class="rule-hair" style="margin: 22px 0 14px;"></div>
+        <p class="lede">Amara Whitlock and Julien Bexley to wed before ninety witnesses on a hillside in Ravello; refreshment to follow, weather permitting.</p>
+        <div class="two-col">
+          <p class="dropcap" style="margin: 0 0 12px;">RAVELLO &mdash; After four years, two cities and one poorly judged sailing holiday, the parties named above have agreed to make the arrangement permanent. The ceremony is set for the twelfth of September, at half past four in the afternoon, in the garden of the Villa Rosa.</p>
+          <p style="margin: 0 0 12px;">Guests are advised that the hillside is steep, the sun is direct, and the wine is local. Comfortable shoes have been recommended by the management and ignored by the bride.</p>
+          <p style="margin: 0;">Replies are requested by the first of August. The coupon appears on the final page of this edition and may be returned without postage.</p>
+        </div>
+      </div>
+      <figure>
+        <div class="photo-frame">
+          <div class="photo-slot tall" style="background-image: url('images/couple-portrait.png'), repeating-linear-gradient(135deg, #cabfa8 0 3px, #d8cfba 3px 6px);"></div>
+        </div>
+        <figcaption>Fig. 1 &mdash; The couple, photographed the morning they stopped pretending it was casual.</figcaption>
+      </figure>
+    </section>
+
+    <section id="story" class="fold">
+      <div class="sec-bar">
+        <h3>A Short History</h3>
+        <div class="rule"></div>
+        <span class="tag">Page Two</span>
+      </div>
+      <div class="story-grid">
+        <div class="story-col rule-off">
+          <h4>The Meeting, 2022</h4>
+          <p style="margin: 0 0 12px;">They were introduced in a queue for coffee that neither of them wanted. Witnesses report a conversation lasting eleven minutes and a subsequent, unexplained detour of four hours.</p>
+          <p style="margin: 0;">A second meeting was arranged under the pretext of returning a borrowed umbrella that had not been borrowed.</p>
+        </div>
+        <div class="story-col rule-off">
+          <h4>The Years Between</h4>
+          <p style="margin: 0 0 12px;">Two apartments, one dog of uncertain ancestry, and a running dispute regarding the correct temperature of a room. The dispute continues and will not be settled by marriage.</p>
+          <div class="story-photo">
+            <div class="photo-slot med" style="height: 150px; background-image: url('images/couple-snapshot.png'), repeating-linear-gradient(135deg, #cabfa8 0 3px, #d8cfba 3px 6px); filter: sepia(0.4) contrast(1.05) saturate(0.6);"></div>
+          </div>
+          <p class="story-photo-caption">Fig. 2 &mdash; The dog, unimpressed.</p>
+        </div>
+        <div class="story-col">
+          <h4>The Question, 2025</h4>
+          <p style="margin: 0 0 12px;">Asked at the kitchen table on an ordinary Tuesday, without music, kneeling or a photographer concealed in the shrubbery. The answer was immediate.</p>
+          <p style="margin: 0 0 16px;">The ring is her grandmother's, resized twice and worn since.</p>
+          <div class="quote-box">&ldquo;We considered eloping. Then we considered the aunts.&rdquo;</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="order" class="fold">
+      <div class="sec-bar">
+        <h3>Order of the Day</h3>
+        <div class="rule"></div>
+        <span class="tag">Twelfth September</span>
+      </div>
+      <div class="order-grid">
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>Hour</th>
+              <th>Event</th>
+              <th>Place</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="order-hour">15:30</td>
+              <td>Arrival &amp; aperitivo</td>
+              <td class="order-place">Lower terrace</td>
+            </tr>
+            <tr>
+              <td class="order-hour">16:30</td>
+              <td>The ceremony</td>
+              <td class="order-place">Garden, Villa Rosa</td>
+            </tr>
+            <tr>
+              <td class="order-hour">17:15</td>
+              <td>Photographs &amp; the receiving line</td>
+              <td class="order-place">Lemon walk</td>
+            </tr>
+            <tr>
+              <td class="order-hour">19:00</td>
+              <td>Dinner, four courses, with speeches</td>
+              <td class="order-place">The Orangery</td>
+            </tr>
+            <tr>
+              <td class="order-hour">22:00</td>
+              <td>Dancing</td>
+              <td class="order-place">The Orangery</td>
+            </tr>
+            <tr>
+              <td class="order-hour">01:00</td>
+              <td>Carriages</td>
+              <td class="order-place">Front gate</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="order-aside">
+          <p class="tag">Notice to Guests</p>
+          <p>The ceremony begins on time. The garden gate is closed at 16:25 and latecomers will be seated at the back, visibly.</p>
+          <hr>
+          <p style="margin: 0;">Children are welcome until dinner. A room with beds and a projector is available thereafter.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="travel" class="fold">
+      <div class="sec-bar">
+        <h3>Travel &amp; Lodging</h3>
+        <div class="rule"></div>
+        <span class="tag">Classified</span>
+      </div>
+      <div class="travel-grid">
+        <article class="travel-card">
+          <span class="tag">By Air</span>
+          <h4>Naples (NAP)</h4>
+          <p>Ninety minutes by road. A shuttle departs the airport at 13:00 on the day and returns at 01:30.</p>
+          <p class="fine">Book by 1 August</p>
+        </article>
+        <article class="travel-card">
+          <span class="tag">Where to Sleep</span>
+          <h4>Three Houses</h4>
+          <p>Rooms held under the name Whitlock&ndash;Bexley at the Pensione Aurora, Casa Lieta and the Villa itself.</p>
+          <p class="fine">From &euro;110 per night</p>
+        </article>
+        <article class="travel-card">
+          <span class="tag">Getting About</span>
+          <h4>The Hill</h4>
+          <p>The town is closed to cars. Bags are carried up by porter; guests are carried up by themselves.</p>
+          <p class="fine">220 steps, approx.</p>
+        </article>
+      </div>
+      <div class="photo-frame" style="margin-top: 28px;">
+        <div class="photo-slot med" style="height: 280px; background-image: url('images/venue.png'), repeating-linear-gradient(135deg, #cabfa8 0 3px, #d8cfba 3px 6px); filter: sepia(0.38) contrast(1.06) saturate(0.65);"></div>
+      </div>
+      <p class="story-photo-caption" style="padding-top: 10px;">Fig. 3 &mdash; Villa Rosa, seen from the lemon walk.</p>
+    </section>
+
+    <section id="dress" class="fold">
+      <div class="sec-bar">
+        <h3>On the Question of Dress</h3>
+        <div class="rule"></div>
+        <span class="tag">Advisory</span>
+      </div>
+      <div class="dress-grid">
+        <div class="marks-grid">
+          <div class="mark">
+            <svg width="78" height="78" viewBox="0 0 78 78" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M28 14 L39 30 L50 14" />
+              <path d="M28 14 L18 22 L18 66 L60 66 L60 22 L50 14" />
+              <path d="M39 30 L39 66" />
+            </svg>
+          </div>
+          <div class="mark">
+            <svg width="78" height="78" viewBox="0 0 78 78" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M30 14 L48 14 L45 32 L58 66 L20 66 L33 32 Z" />
+              <path d="M33 32 L45 32" />
+            </svg>
+          </div>
+          <div class="mark">
+            <svg width="78" height="78" viewBox="0 0 78 78" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M18 24 L30 24 L36 40 L58 46 L58 56 L18 56 Z" />
+              <path d="M18 56 L18 62" />
+            </svg>
+          </div>
+          <div class="mark-note">Garden Formal &middot; No Black Tie</div>
+        </div>
+        <div>
+          <p class="lede">Dress as though you intend to be photographed, then walk two hundred steps in it.</p>
+          <div class="two-col">
+            <p style="margin: 0 0 12px;">Long dresses and light suits are correct. Linen is forgiven its creases. The garden is grass and gravel throughout, and heels of a narrow gauge will be lost to it.</p>
+            <p style="margin: 0;">The evening cools sharply after nine. A jacket, a shawl or a borrowed one from the couple's own supply is advised.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rsvp" class="fold" style="padding-bottom: 56px;">
+      <div class="sec-bar">
+        <h3>The Reply Coupon</h3>
+        <div class="rule"></div>
+        <span class="tag">Return by 1 August</span>
+      </div>
+
+      <div class="coupon">
+        <div id="couponForm" class="coupon-grid">
+          <div>
+            <p class="tag" style="margin: 0 0 16px; color: var(--color-accent-700);">Detach here and return</p>
+            <label for="rsvp-name">Name of guest</label>
+            <input id="rsvp-name" class="coupon-input" type="text" placeholder="Written in block capitals" />
+            <p class="coupon-will">The guest will</p>
+            <div class="reply-btns">
+              <button id="rsvpYes" type="button" class="reply-btn">Attend with pleasure</button>
+              <button id="rsvpNo" type="button" class="reply-btn">Decline with regret</button>
+            </div>
+            <p class="coupon-note">One coupon per guest. Amendments may be posted to the same address until the first of September.</p>
+          </div>
+          <div class="coupon-divider"></div>
+          <div>
+            <p class="signature">Amara Whitlock<br>&amp; Julien Bexley</p>
+            <p class="coupon-when">Saturday the twelfth of September, two thousand and twenty-six, at half past four in the afternoon. Villa Rosa, Ravello.</p>
+            <button id="rsvpSend" type="button" class="post-btn">Post the coupon</button>
+            <p id="rsvpHint" class="coupon-hint"></p>
+          </div>
+        </div>
+
+        <div id="couponConfirm" class="coupon-confirm">
+          <p class="tag">Received at the desk</p>
+          <div id="rsvpStamp" class="stamp">Accepted</div>
+          <p id="confirmTitle" class="confirm-title">You are expected.</p>
+          <p id="confirmBody" class="confirm-body"></p>
+          <button id="rsvpReset" type="button" class="amend-btn">Amend this reply</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>The Morning Vow &middot; Ravello Edition</span>
+      <span>Set in Cormorant Garamond &amp; Lora</span>
+      <span>All enquiries: hello@themorningvow.example</span>
+    </footer>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var folds = Array.prototype.slice.call(document.querySelectorAll(".fold"));
+
+  function show(el) { el.classList.add("is-shown"); }
+
+  if (typeof IntersectionObserver === "function") {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { show(entry.target); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.08 });
+    folds.forEach(function (el) { io.observe(el); });
+  } else {
+    folds.forEach(show);
+  }
+
+  // content can never stay hidden
+  window.setTimeout(function () { folds.forEach(show); }, 2500);
+})();
+
+(function () {
+  "use strict";
+  var nameInput = document.getElementById("rsvp-name");
+  var yesBtn = document.getElementById("rsvpYes");
+  var noBtn = document.getElementById("rsvpNo");
+  var sendBtn = document.getElementById("rsvpSend");
+  var hint = document.getElementById("rsvpHint");
+  var form = document.getElementById("couponForm");
+  var confirm = document.getElementById("couponConfirm");
+  var stamp = document.getElementById("rsvpStamp");
+  var confirmTitle = document.getElementById("confirmTitle");
+  var confirmBody = document.getElementById("confirmBody");
+  var resetBtn = document.getElementById("rsvpReset");
+
+  var choice = null;
+
+  function setChoice(val) {
+    choice = val;
+    yesBtn.classList.toggle("active", choice === "yes");
+    noBtn.classList.toggle("active", choice === "no");
+    hint.textContent = "";
+  }
+
+  yesBtn.addEventListener("click", function () { setChoice("yes"); });
+  noBtn.addEventListener("click", function () { setChoice("no"); });
+  nameInput.addEventListener("input", function () { hint.textContent = ""; });
+
+  sendBtn.addEventListener("click", function () {
+    if (!nameInput.value.trim() || !choice) {
+      hint.textContent = "Name and reply required";
+      return;
+    }
+    var yes = choice === "yes";
+    stamp.textContent = yes ? "Accepted" : "Regrets";
+    confirmTitle.textContent = yes ? "You are expected." : "You will be missed.";
+    confirmBody.textContent = yes
+      ? "Filed under attending. A card with directions, the shuttle timetable and the name of a reliable taxi driver follows by post."
+      : "Filed under regrets. A slice of cake will be sent in your stead, and a photograph of the garden at dusk.";
+    form.style.display = "none";
+    confirm.style.display = "block";
+  });
+
+  resetBtn.addEventListener("click", function () {
+    confirm.style.display = "none";
+    form.style.display = "grid";
+  });
+})();
+</script>
+
+</body>
+</html>
