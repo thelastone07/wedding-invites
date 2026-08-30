@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wren &amp; Ilya — RSVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&amp;family=Source+Serif+4:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet" />
+<style>
+  :root {
+    color-scheme: light;
+    --color-bg: #f3f2f2;
+    --color-surface: #eae9e9;
+    --color-text: #201e1d;
+    --color-accent: #0088b0;
+    --color-accent-700: #006786;
+    --color-accent-900: #0a303e;
+    --color-divider: rgba(32, 30, 29, 0.16);
+    --font-heading: "Source Serif 4", Georgia, serif;
+    --font-body: "Source Serif 4", Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  body {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background: var(--color-bg);
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: var(--color-accent-700); text-decoration: none; }
+  a:hover { color: var(--color-accent-900); }
+  h1, h2 { margin: 0; }
+
+  @keyframes inkIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* — buttons — */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    cursor: pointer; text-decoration: none;
+    font-family: var(--font-heading); font-weight: 600;
+    font-size: 15px; line-height: 1.2; color: var(--color-text);
+    background: transparent; border: 1px solid transparent;
+    padding: 13px 20px; border-radius: 2px;
+  }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-secondary { border-color: var(--color-divider); }
+  .btn-secondary:hover { background: rgba(32, 30, 29, 0.07); }
+  .btn-secondary:active { background: rgba(32, 30, 29, 0.14); }
+  .btn-ghost { color: var(--color-accent); padding-inline: 5px; }
+  .btn-ghost:hover { background: rgba(0, 136, 176, 0.1); }
+  .btn-ghost:active { background: rgba(0, 136, 176, 0.18); }
+  .btn-primary { background: var(--color-text); color: var(--color-bg); }
+  .btn-primary:hover { background: #000; }
+
+  /* — form — */
+  .field > label {
+    display: block; font-size: 12px; margin-bottom: 5px;
+    color: rgba(32, 30, 29, 0.7);
+  }
+  .input {
+    width: 100%; min-height: 36px; padding: 6px 10px; font: inherit;
+    font-size: 14px; color: var(--color-text); caret-color: var(--color-accent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-divider); border-radius: 2px;
+  }
+  .input::placeholder { color: rgba(32, 30, 29, 0.65); opacity: 1; }
+  .input:hover { border-color: rgba(32, 30, 29, 0.45); }
+  .input:focus-visible { border-color: var(--color-accent); outline: none; }
+</style>
+</head>
+<body>
+
+<div style="font-family: var(--font-body); color: var(--color-text); background: var(--color-bg); overflow-x: hidden;">
+
+  <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 16px clamp(18px, 4vw, 40px); mix-blend-mode: multiply;">
+    <div style="font-family: var(--font-heading); font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase;">W &amp; I</div>
+    <div style="font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6;">Saturday, 12 June 2027</div>
+  </div>
+
+  <div data-flight="1" data-tail="70" style="position: relative; height: 640vh;">
+
+    <svg viewBox="0 0 1000 6400" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;">
+      <defs>
+        <filter id="ppWobble" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="7" result="n"></feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+        </filter>
+      </defs>
+      <path data-path="1" d="M 880 40 C 950 420, 700 700, 790 980 C 910 1340, 200 1660, 215 2080 C 232 2500, 830 2780, 805 3220 C 782 3640, 195 3940, 220 4360 C 244 4780, 700 4980, 640 5320 C 592 5600, 470 5760, 500 5980" fill="none" stroke="none"></path>
+      <g data-trail="1" filter="url(#ppWobble)" stroke="var(--color-text)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <polyline data-seg="0" points="" fill="none" vector-effect="non-scaling-stroke"></polyline>
+        <polyline data-seg="1" points="" fill="none" vector-effect="non-scaling-stroke"></polyline>
+        <polyline data-seg="2" points="" fill="none" vector-effect="non-scaling-stroke"></polyline>
+        <polyline data-seg="3" points="" fill="none" vector-effect="non-scaling-stroke"></polyline>
+        <polyline data-seg="4" points="" fill="none" vector-effect="non-scaling-stroke"></polyline>
+        <polyline data-seg="5" points="" fill="none" vector-effect="non-scaling-stroke"></polyline>
+        <polyline data-seg="6" points="" fill="none" vector-effect="non-scaling-stroke"></polyline>
+        <polyline data-seg="7" points="" fill="none" vector-effect="non-scaling-stroke"></polyline>
+        <polyline data-seg="8" points="" fill="none" vector-effect="non-scaling-stroke"></polyline>
+      </g>
+    </svg>
+
+    <div data-plane="1" style="position: absolute; left: 88%; top: 1%; opacity: 0; transform: translate(-50%, -50%); will-change: transform, left, top, opacity; pointer-events: none;">
+      <svg width="86" height="86" viewBox="0 0 100 100" style="display: block; overflow: visible;">
+        <g filter="url(#ppWobble)" fill="none" stroke="var(--color-text)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M 8 46 L 92 12 L 62 88 L 47 60 Z"></path>
+          <path d="M 8 46 L 47 60 L 92 12"></path>
+          <path d="M 47 60 L 40 82 L 62 88"></path>
+        </g>
+      </svg>
+    </div>
+
+    <div style="position: absolute; left: 50%; top: 7vh; transform: translateX(-50%); text-align: center; width: min(760px, 86vw);">
+      <div style="font-family: 'Caveat', cursive; font-size: clamp(24px, 3.4vw, 30px); opacity: 0.72;">a little paper plane is on its way &mdash; follow it down</div>
+      <h1 style="font-family: var(--font-heading); font-weight: 400; font-size: clamp(46px, 8vw, 108px); line-height: 1.02; margin: 18px 0 0; letter-spacing: -0.02em;">Wren &amp; Ilya</h1>
+      <div style="margin-top: 22px; font-size: clamp(13px, 2vw, 15px); letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.66;">Saturday, 12 June 2027 &nbsp;&middot;&nbsp; Hollow Barn, Somerset</div>
+    </div>
+
+    <div data-vig="0.17,left" style="position: absolute; top: 17%; left: 7vw; width: min(400px, 38vw); display: flex; flex-direction: column; opacity: 0; transform: translateY(-50%); will-change: opacity, transform; pointer-events: none;">
+      <div style="font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.55; white-space: nowrap; line-height: 1.4; margin-bottom: 4px;">Autumn 2021</div>
+      <div style="font-family: 'Caveat', cursive; font-size: clamp(32px, 3.4vw, 48px); line-height: 1.12; margin-top: 6px; max-width: 20ch;">we met in the wrong queue</div>
+      <div style="font-size: 17px; line-height: 1.65; opacity: 0.75; max-width: 30ch; margin-top: 12px; text-wrap: pretty;">A friend's book launch, a downpour, one umbrella between four people. Ilya held it. Wren talked for two hours and missed the last bus.</div>
+      <svg width="min(300px, 62vw)" viewBox="0 0 300 210" style="margin-top: 18px; overflow: visible;">
+        <g filter="url(#ppWobble)" fill="none" stroke="var(--color-text)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 40 66 C 78 22, 178 22, 214 66 C 190 56, 172 56, 152 66 C 132 56, 110 56, 92 66 C 74 56, 56 58, 40 66 Z"></path>
+          <path d="M 127 66 L 127 150"></path>
+          <circle cx="104" cy="104" r="19"></circle>
+          <path d="M 104 126 C 88 134, 82 158, 84 206"></path>
+          <path d="M 104 126 C 118 134, 124 158, 122 206"></path>
+          <path d="M 118 118 L 127 108"></path>
+          <circle cx="166" cy="110" r="18"></circle>
+          <path d="M 166 130 C 182 138, 188 162, 186 206"></path>
+          <path d="M 166 130 C 152 140, 148 166, 150 206"></path>
+          <path d="M 152 124 L 132 116"></path>
+          <path d="M 24 206 L 276 206"></path>
+          <path d="M 246 40 L 238 66 M 262 74 L 254 98 M 226 96 L 220 118"></path>
+        </g>
+      </svg>
+    </div>
+
+    <div data-vig="0.35,right" style="position: absolute; top: 35%; right: 7vw; width: min(400px, 38vw); display: flex; flex-direction: column; align-items: flex-end; text-align: right; opacity: 0; transform: translateY(-50%); will-change: opacity, transform; pointer-events: none;">
+      <div style="font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.55; white-space: nowrap; line-height: 1.4; margin-bottom: 4px;">Summer 2023</div>
+      <div style="font-family: 'Caveat', cursive; font-size: clamp(32px, 3.4vw, 48px); line-height: 1.12; margin-top: 6px; max-width: 20ch;">one bench, every Sunday</div>
+      <div style="font-size: 17px; line-height: 1.65; opacity: 0.75; max-width: 30ch; margin-top: 12px; text-wrap: pretty;">Then the flat on Pomona Street, a kettle that screamed, and a standing Sunday appointment on the bench by the canal.</div>
+      <svg width="min(300px, 62vw)" viewBox="0 0 300 210" style="margin-top: 18px; overflow: visible;">
+        <g filter="url(#ppWobble)" fill="none" stroke="var(--color-text)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="112" cy="70" r="19"></circle>
+          <path d="M 112 92 C 96 100, 90 122, 92 146"></path>
+          <path d="M 92 146 L 92 190"></path>
+          <path d="M 112 92 C 126 100, 132 120, 130 146 L 130 190"></path>
+          <path d="M 128 118 C 146 128, 156 128, 172 120"></path>
+          <circle cx="188" cy="76" r="18"></circle>
+          <path d="M 188 96 C 204 104, 210 124, 208 148 L 208 190"></path>
+          <path d="M 188 96 C 174 104, 168 124, 170 148 L 170 190"></path>
+          <path d="M 172 120 C 158 126, 146 124, 132 116"></path>
+          <path d="M 62 148 L 240 148"></path>
+          <path d="M 74 148 L 74 190 M 228 148 L 228 190"></path>
+          <path d="M 62 128 L 240 128"></path>
+          <path d="M 30 190 L 276 190"></path>
+          <path d="M 52 92 C 44 74, 46 58, 58 44 M 58 44 C 66 56, 66 76, 52 92 Z"></path>
+        </g>
+      </svg>
+    </div>
+
+    <div data-vig="0.53,left" style="position: absolute; top: 53%; left: 7vw; width: min(400px, 38vw); display: flex; flex-direction: column; opacity: 0; transform: translateY(-50%); will-change: opacity, transform; pointer-events: none;">
+      <div style="font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.55; white-space: nowrap; line-height: 1.4; margin-bottom: 4px;">Spring 2024</div>
+      <div style="font-family: 'Caveat', cursive; font-size: clamp(32px, 3.4vw, 48px); line-height: 1.12; margin-top: 6px; max-width: 20ch;">then there were three</div>
+      <div style="font-size: 17px; line-height: 1.65; opacity: 0.75; max-width: 30ch; margin-top: 12px; text-wrap: pretty;">Biscuit arrived from the shelter in March, decided the sofa was hers, and has been the loudest member of the household since.</div>
+      <svg width="min(300px, 62vw)" viewBox="0 0 300 210" style="margin-top: 18px; overflow: visible;">
+        <g filter="url(#ppWobble)" fill="none" stroke="var(--color-text)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="96" cy="62" r="18"></circle>
+          <path d="M 96 82 C 80 92, 74 118, 76 156 L 70 196"></path>
+          <path d="M 96 82 C 110 92, 116 118, 114 156 L 116 196"></path>
+          <path d="M 112 112 C 130 122, 142 122, 158 114"></path>
+          <circle cx="176" cy="68" r="18"></circle>
+          <path d="M 176 88 C 192 98, 198 122, 196 158 L 200 196"></path>
+          <path d="M 176 88 C 162 98, 156 122, 158 158 L 154 196"></path>
+          <path d="M 158 114 C 146 118, 134 116, 122 108"></path>
+          <path d="M 196 132 C 216 146, 232 152, 244 152"></path>
+          <path d="M 240 152 C 250 142, 264 142, 272 152 C 278 160, 276 176, 268 182 L 250 182 C 240 176, 236 160, 240 152 Z"></path>
+          <path d="M 258 142 L 254 128 M 268 144 L 272 130"></path>
+          <path d="M 272 168 C 284 164, 290 172, 288 184"></path>
+          <path d="M 30 196 L 292 196"></path>
+        </g>
+      </svg>
+    </div>
+
+    <div data-vig="0.71,right" style="position: absolute; top: 71%; right: 7vw; width: min(400px, 38vw); display: flex; flex-direction: column; align-items: flex-end; text-align: right; opacity: 0; transform: translateY(-50%); will-change: opacity, transform; pointer-events: none;">
+      <div style="font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.55; white-space: nowrap; line-height: 1.4; margin-bottom: 4px;">New Year&rsquo;s Eve 2025</div>
+      <div style="font-family: 'Caveat', cursive; font-size: clamp(32px, 3.4vw, 48px); line-height: 1.12; margin-top: 6px; max-width: 20ch;">he asked. she said yes, obviously</div>
+      <div style="font-size: 17px; line-height: 1.65; opacity: 0.75; max-width: 30ch; margin-top: 12px; text-wrap: pretty;">Kneeling in the snow outside the flat at ten to midnight, with the ring in a coat pocket for eleven days.</div>
+      <svg width="min(300px, 62vw)" viewBox="0 0 300 210" style="margin-top: 18px; overflow: visible;">
+        <g filter="url(#ppWobble)" fill="none" stroke="var(--color-text)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="196" cy="52" r="19"></circle>
+          <path d="M 196 74 C 212 84, 218 116, 216 154 L 220 196"></path>
+          <path d="M 196 74 C 180 84, 174 116, 176 154 L 172 196"></path>
+          <path d="M 178 108 C 160 116, 146 118, 132 112"></path>
+          <path d="M 178 128 C 164 138, 150 142, 138 140"></path>
+          <circle cx="86" cy="96" r="18"></circle>
+          <path d="M 86 116 C 70 126, 64 148, 66 172"></path>
+          <path d="M 86 116 C 100 126, 108 146, 108 172"></path>
+          <path d="M 66 172 L 40 196 M 108 172 L 118 196"></path>
+          <path d="M 66 172 L 108 172"></path>
+          <path d="M 104 132 C 116 128, 126 122, 132 112"></path>
+          <circle cx="130" cy="106" r="6"></circle>
+          <path d="M 130 92 L 130 82 M 142 100 L 152 94 M 118 100 L 108 94"></path>
+          <path d="M 20 196 L 288 196"></path>
+        </g>
+      </svg>
+    </div>
+
+    <div data-reveal="1" style="position: absolute; left: 50%; bottom: 50vh; transform: translate(-50%, 50%); opacity: 0; display: flex; flex-direction: column; align-items: center; gap: 26px; width: min(760px, 88vw); will-change: opacity, transform;">
+      <div style="font-family: 'Caveat', cursive; font-size: clamp(36px, 5.4vw, 76px); line-height: 1.08; text-align: center; max-width: 18ch;">and there they are — come stand with us</div>
+      <svg width="min(560px, 82vw)" viewBox="0 0 420 300" style="margin-top: 8px; overflow: visible;">
+        <g filter="url(#ppWobble)" fill="none" stroke="var(--color-text)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="150" cy="66" r="30"></circle>
+          <path d="M 122 52 C 128 24, 176 22, 180 54 C 184 30, 168 12, 146 14 C 124 16, 116 34, 122 52 Z"></path>
+          <path d="M 150 96 C 128 108, 116 140, 114 186 C 112 238, 118 268, 124 292"></path>
+          <path d="M 150 96 C 172 108, 184 140, 186 186 C 188 238, 182 268, 176 292"></path>
+          <path d="M 122 186 L 178 186"></path>
+          <path d="M 176 130 C 200 148, 220 152, 240 146"></path>
+          <circle cx="272" cy="72" r="28"></circle>
+          <path d="M 248 60 C 250 34, 294 34, 296 60"></path>
+          <path d="M 272 100 C 252 112, 244 142, 246 186 C 248 236, 252 266, 256 292"></path>
+          <path d="M 272 100 C 294 112, 304 142, 302 186 C 300 236, 296 266, 292 292"></path>
+          <path d="M 246 146 C 226 152, 208 148, 190 134"></path>
+          <path d="M 60 292 L 366 292"></path>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div style="max-width: 1120px; margin: 0 auto; padding: 0 clamp(22px, 6vw, 40px) clamp(90px, 14vw, 200px);">
+
+    <section style="padding-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: clamp(40px, 6vw, 96px); align-items: start;">
+      <div>
+        <div style="font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.6;">R.S.V.P.</div>
+        <h2 style="font-family: var(--font-heading); font-weight: 400; font-size: clamp(34px, 4.4vw, 62px); line-height: 1.05; margin: 14px 0 0; letter-spacing: -0.015em;">Send the plane back to us</h2>
+        <p style="font-size: 19px; line-height: 1.65; max-width: 34ch; margin: 20px 0 0; opacity: 0.8; text-wrap: pretty;">Kindly reply by 1 April 2027. One name per plane &mdash; if you are bringing someone, send a second.</p>
+      </div>
+      <div>
+        <div id="rsvpSent" style="display: none; animation: inkIn 0.5s ease both;">
+          <div id="sentLine" style="font-family: 'Caveat', cursive; font-size: clamp(34px, 4.6vw, 46px); line-height: 1.15;"></div>
+          <button id="rsvpReset" class="btn btn-ghost" style="margin-top: 18px;">Send another</button>
+        </div>
+        <div id="rsvpNotSent">
+          <div class="field">
+            <label for="pp-name">Your name</label>
+            <input id="pp-name" class="input" type="text" placeholder="e.g. Margot Ellery">
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px;">
+            <button id="rsvpAccept" class="btn btn-primary" style="font-size: 15px; padding: 13px 20px;">Joyfully accepts</button>
+            <button id="rsvpDecline" class="btn btn-secondary" style="font-size: 15px; padding: 13px 20px;">Regretfully declines</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding-top: clamp(100px, 14vw, 180px);">
+      <div style="font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.6;">The day</div>
+      <h2 style="font-family: var(--font-heading); font-weight: 400; font-size: clamp(34px, 4.4vw, 62px); line-height: 1.05; margin: 14px 0 46px; letter-spacing: -0.015em;">A rough flight plan</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: clamp(36px, 5vw, 56px) 64px;">
+        <div>
+          <div style="font-family: 'Caveat', cursive; font-size: 38px; line-height: 1;">2:00</div>
+          <div style="font-family: var(--font-heading); font-size: 24px; margin-top: 12px;">Arrive</div>
+          <div style="font-size: 17px; line-height: 1.6; margin-top: 8px; opacity: 0.75; max-width: 26ch;">Lemonade in the orchard while we pace about indoors.</div>
+        </div>
+        <div>
+          <div style="font-family: 'Caveat', cursive; font-size: 38px; line-height: 1;">3:00</div>
+          <div style="font-family: var(--font-heading); font-size: 24px; margin-top: 12px;">Vows</div>
+          <div style="font-size: 17px; line-height: 1.6; margin-top: 8px; opacity: 0.75; max-width: 26ch;">Twelve minutes, one hymn, no speeches yet.</div>
+        </div>
+        <div>
+          <div style="font-family: 'Caveat', cursive; font-size: 38px; line-height: 1;">4:30</div>
+          <div style="font-family: var(--font-heading); font-size: 24px; margin-top: 12px;">Long table</div>
+          <div style="font-size: 17px; line-height: 1.6; margin-top: 8px; opacity: 0.75; max-width: 26ch;">One very long table under the beams.</div>
+        </div>
+        <div>
+          <div style="font-family: 'Caveat', cursive; font-size: 38px; line-height: 1;">9:00</div>
+          <div style="font-family: var(--font-heading); font-size: 24px; margin-top: 12px;">Dancing</div>
+          <div style="font-size: 17px; line-height: 1.6; margin-top: 8px; opacity: 0.75; max-width: 26ch;">Until the generator or our knees give out.</div>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding-top: clamp(100px, 14vw, 180px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: clamp(40px, 6vw, 96px); align-items: start;">
+      <div>
+        <div style="font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.6;">Venue &amp; travel</div>
+        <h2 style="font-family: var(--font-heading); font-weight: 400; font-size: clamp(34px, 4.4vw, 62px); line-height: 1.05; margin: 14px 0 0; letter-spacing: -0.015em;">Hollow Barn, Somerset</h2>
+        <p style="font-size: 19px; line-height: 1.65; margin: 22px 0 0; opacity: 0.8; max-width: 38ch; text-wrap: pretty;">A stone barn at the end of a long green lane, with a field for the dancing and far too many candles. Ceremony outside if the sky behaves, inside if it doesn't.</p>
+      </div>
+      <div style="display: grid; gap: 34px; padding-top: 10px;">
+        <div>
+          <div style="font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.6;">Getting there</div>
+          <div style="font-size: 19px; line-height: 1.6; margin-top: 8px; max-width: 34ch;">50 minutes from Bristol Temple Meads; taxis are scarce, so share one.</div>
+        </div>
+        <div>
+          <div style="font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.6;">Staying over</div>
+          <div style="font-size: 19px; line-height: 1.6; margin-top: 8px; max-width: 34ch;">Ten rooms on site, ballot by reply date. The village inn holds a block under our names.</div>
+        </div>
+        <div>
+          <div style="font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.6;">Wearing</div>
+          <div style="font-size: 19px; line-height: 1.6; margin-top: 8px; max-width: 34ch;">Garden formal. The grass is real grass &mdash; heels will lose.</div>
+        </div>
+      </div>
+    </section>
+
+    <div style="padding-top: clamp(96px, 14vw, 170px); text-align: center; font-family: 'Caveat', cursive; font-size: 34px; opacity: 0.7;">See you in the sky &mdash; W &amp; I</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var S = null;
+  var VB = 6400;
+
+  function build() {
+    var f = document.querySelector("[data-flight]");
+    if (!f) return null;
+    var path = f.querySelector("[data-path]");
+    var trail = f.querySelector("[data-trail]");
+    if (!path || !trail || !path.getTotalLength) return null;
+    var L = path.getTotalLength();
+    if (!L) return null;
+    var N = 520;
+    var pts = [];
+    for (var i = 0; i < N; i++) {
+      var pt = path.getPointAtLength((i / (N - 1)) * L);
+      pts.push([pt.x, pt.y]);
+    }
+    var lines = [].slice.call(f.querySelectorAll("[data-seg]"));
+    if (!lines.length) return null;
+    var vigs = [].slice.call(f.querySelectorAll("[data-vig]")).map(function (el) {
+      var a = el.getAttribute("data-vig").split(",");
+      return { el: el, f: parseFloat(a[0]), side: a[1] };
+    });
+    return {
+      f: f,
+      pts: pts,
+      trail: trail,
+      lines: lines,
+      vigs: vigs,
+      plane: f.querySelector("[data-plane]"),
+      reveal: f.querySelector("[data-reveal]")
+    };
+  }
+
+  function clamp(v) {
+    return v < 0 ? 0 : v > 1 ? 1 : v;
+  }
+
+  function apply() {
+    if (!S || !S.f.isConnected || !S.lines[0].isConnected) S = build();
+    if (!S) return;
+    var f = S.f;
+    var pts = S.pts;
+    var ch = f.offsetHeight;
+    var vh = window.innerHeight;
+    var vw = window.innerWidth;
+    if (!ch) return;
+    var top = 0;
+    var n = f;
+    while (n) {
+      top += n.offsetTop;
+      n = n.offsetParent;
+    }
+    var sc = document.scrollingElement || document.documentElement;
+    var sy = window.pageYOffset || sc.scrollTop || 0;
+    var span = Math.max(1, ch - vh);
+    var p = clamp((sy - top) / span);
+    var narrow = vw < 760;
+    var sx = narrow ? 0.44 : 1;
+    var tail = parseInt(f.getAttribute("data-tail") || "70", 10);
+    var CH = S.lines.length;
+
+    S.trail.setAttribute(
+      "transform",
+      narrow ? "translate(500 0) scale(" + sx + " 1) translate(-500 0)" : ""
+    );
+
+    var ease = clamp((p - 0.82) / 0.18);
+    var anchor = 0.62 + (1.3 - 0.62) * ease * ease;
+    var targetY = ((p * span + anchor * vh) / ch) * VB;
+    var lo = 0;
+    var up = pts.length - 1;
+    while (lo < up) {
+      var m = (lo + up) >> 1;
+      if (pts[m][1] < targetY) lo = m + 1;
+      else up = m;
+    }
+    var hi = lo;
+
+    var start = Math.max(0, hi - tail);
+    var sp = hi - start;
+    for (var c = 0; c < CH; c++) {
+      var a = Math.floor(start + (sp * c) / CH);
+      var b = Math.floor(start + (sp * (c + 1)) / CH);
+      var pl = S.lines[c];
+      if (b - a < 1) {
+        pl.setAttribute("points", "");
+        continue;
+      }
+      var t = (c + 1) / CH;
+      var str = "";
+      var end = Math.min(pts.length, b + 2);
+      for (var k = a; k < end; k++) {
+        str += pts[k][0].toFixed(1) + "," + pts[k][1].toFixed(1) + " ";
+      }
+      pl.setAttribute("points", str);
+      pl.setAttribute("opacity", (0.06 + 0.94 * Math.pow(t, 2.1)).toFixed(3));
+      pl.setAttribute("stroke-width", (0.9 + 1.5 * t).toFixed(2));
+    }
+
+    if (S.plane) {
+      var cur = pts[Math.min(pts.length - 1, hi)];
+      var nxt = pts[Math.min(pts.length - 1, hi + 3)];
+      var x = ((500 + (cur[0] - 500) * sx) / 1000) * 100;
+      var y = (cur[1] / VB) * 100;
+      var ang = (Math.atan2(nxt[1] - cur[1], nxt[0] - cur[0]) * 180) / Math.PI;
+      var st = S.plane.style;
+      st.left = x.toFixed(3) + "%";
+      st.top = y.toFixed(3) + "%";
+      st.transform =
+        "translate(-50%,-50%) rotate(" + ang.toFixed(1) + "deg)" + (narrow ? " scale(0.62)" : "");
+      st.opacity = (1 - clamp((p - 0.9) / 0.08)).toFixed(3);
+    }
+
+    for (var v = 0; v < S.vigs.length; v++) {
+      var g = S.vigs[v];
+      var vs = g.el.style;
+      var center = (g.f * ch - vh * 0.5) / span;
+      var d = Math.abs(p - center);
+      var o = d <= 0.065 ? 1 : Math.max(0, 1 - (d - 0.065) / 0.075);
+      var e = 1 - Math.pow(o, 0.7);
+      var dir = p < center ? 1 : -1;
+      if (narrow) {
+        vs.left = "0";
+        vs.right = "0";
+        vs.width = "auto";
+        vs.padding = "0 8vw";
+        vs.textAlign = "left";
+        vs.alignItems = "flex-start";
+      } else {
+        vs.padding = "0";
+        vs.width = "min(400px, 38vw)";
+        if (g.side === "left") {
+          vs.left = "7vw";
+          vs.right = "auto";
+          vs.textAlign = "left";
+          vs.alignItems = "flex-start";
+        } else {
+          vs.right = "7vw";
+          vs.left = "auto";
+          vs.textAlign = "right";
+          vs.alignItems = "flex-end";
+        }
+      }
+      vs.transform = "translateY(calc(-50% + " + (dir * e * 40).toFixed(1) + "px))";
+      vs.opacity = o.toFixed(3);
+    }
+
+    if (S.reveal) {
+      var rv = clamp((p - 0.86) / 0.14);
+      S.reveal.style.transform =
+        "translate(-50%, calc(50% + " + ((1 - rv) * 34).toFixed(1) + "px))";
+      S.reveal.style.opacity = rv.toFixed(3);
+    }
+  }
+
+  function loop() {
+    apply();
+    window.requestAnimationFrame(loop);
+  }
+  window.requestAnimationFrame(loop);
+  window.addEventListener("scroll", apply, { passive: true });
+  window.addEventListener("resize", apply);
+  window.setInterval(apply, 120);
+  document.addEventListener("DOMContentLoaded", apply);
+})();
+
+(function () {
+  "use strict";
+  var nameInput = document.getElementById("pp-name");
+  var notSent = document.getElementById("rsvpNotSent");
+  var sent = document.getElementById("rsvpSent");
+  var sentLine = document.getElementById("sentLine");
+  var acceptBtn = document.getElementById("rsvpAccept");
+  var declineBtn = document.getElementById("rsvpDecline");
+  var resetBtn = document.getElementById("rsvpReset");
+
+  function showSent(kind) {
+    var who = nameInput.value.trim() || "you";
+    sentLine.textContent =
+      kind === "yes"
+        ? "Wonderful — " + who + ", you're on the list."
+        : "Understood — " + who + ", we'll raise one for you.";
+    notSent.style.display = "none";
+    sent.style.display = "block";
+  }
+
+  acceptBtn.addEventListener("click", function () { showSent("yes"); });
+  declineBtn.addEventListener("click", function () { showSent("no"); });
+  resetBtn.addEventListener("click", function () {
+    nameInput.value = "";
+    sent.style.display = "none";
+    notSent.style.display = "block";
+  });
+})();
+</script>
+
+</body>
+</html>
